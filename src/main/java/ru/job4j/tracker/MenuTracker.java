@@ -20,7 +20,7 @@ public class MenuTracker {
     /**
      * Хранение заявок.
      */
-    private Tracker tracker;
+    private Store tracker;
 
     /**
      * Хранение действий над заявками.
@@ -29,7 +29,7 @@ public class MenuTracker {
 
     private Consumer<String> printer = System.out::println;
 
-    MenuTracker(Input input, Tracker tracker) {
+    MenuTracker(Input input, Store tracker) {
         this.input = input;
         this.tracker = tracker;
     }
@@ -95,12 +95,12 @@ public class MenuTracker {
         }
 
         @Override
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, Store tracker) {
             String name = input.ask("Введите имя для новой заявки: ");
             String desc = input.ask("Введите описание для новой заявки: ");
             Item item = new Item(name, desc);
             tracker.add(item);
-            printer.accept("---------- Создана новая заявка с идентификатором ".concat(item.getId()).concat(" ----------"));
+            printer.accept("---------- Создана новая заявка с именем ".concat(item.getName()).concat(" ----------"));
         }
     }
 
@@ -119,7 +119,7 @@ public class MenuTracker {
         }
 
         @Override
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, Store tracker) {
             this.printer.accept("---------- Перечень существующих заявок. ----------");
             this.printer.accept("Идентификатор:  Имя:    Описание:");
             for (Item item : tracker.findAll()) {
@@ -141,7 +141,7 @@ public class MenuTracker {
         }
 
         @Override
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, Store tracker) {
             String id = input.ask("Введите идентификатор удаляемой заявки: ");
             tracker.delete(id);
             printer.accept("---------- Заявка удалена. ----------");
@@ -163,7 +163,7 @@ public class MenuTracker {
         }
 
         @Override
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, Store tracker) {
             String id = input.ask("Введите идентификатор искомой заявки: ");
             Item item = tracker.findById(id);
             if (item == null) {
@@ -171,9 +171,7 @@ public class MenuTracker {
             } else {
                 this.printer.accept("---------- Заявка найдена. ----------");
                 this.printer.accept("Идентификатор:  Имя:    Описание:");
-                this.printer.accept(item.getId()
-                        .concat(" ")
-                        .concat(item.getName())
+                this.printer.accept(item.getName()
                         .concat(" ")
                         .concat(item.getDesc())
                 );
@@ -197,7 +195,7 @@ class EditItem extends BaseAction {
     }
 
     @Override
-    public void execute(Input input, Tracker tracker) {
+    public void execute(Input input, Store tracker) {
         String id = input.ask("Введите идентификатор редактируемой заявки: ");
         Item item = tracker.findById(id);
         if (item == null) {
@@ -232,7 +230,7 @@ class FindByName extends BaseAction {
     }
 
     @Override
-    public void execute(Input input, Tracker tracker) {
+    public void execute(Input input, Store tracker) {
         String key = input.ask("Введите ключ для поиска заявок по имени: ");
         List<Item> items = tracker.findByName(key);
         if (items.size() == 0) {
@@ -241,7 +239,7 @@ class FindByName extends BaseAction {
             this.printer.accept("---------- Найдены следующие заявки. ----------");
             this.printer.accept("Идентификатор:  Имя:    Описание:");
             for (Item item : items) {
-                this.printer.accept(item.getId().concat(" ").concat(item.getName()).concat(" ").concat(item.getDesc()));
+                this.printer.accept(item.getName().concat(" ").concat(item.getDesc()));
             }
         }
     }
@@ -266,7 +264,7 @@ class Exit implements UserAction {
     }
 
     @Override
-    public void execute(Input input, Tracker tracker) {
+    public void execute(Input input, Store tracker) {
         this.ui.stop();
     }
 

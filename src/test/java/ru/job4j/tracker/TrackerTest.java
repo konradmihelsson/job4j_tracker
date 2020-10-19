@@ -12,7 +12,7 @@ public class TrackerTest {
 
     @Test
     public void whenAddNewItemThenTrackerHasSameItem() {
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item item = new Item("name1", "desc1", 123L);
         tracker.add(item);
         assertThat(tracker.findAll().get(0), is(item));
@@ -20,7 +20,7 @@ public class TrackerTest {
 
     @Test
     public void whenReplaceNameThenReturnNewName() {
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item oldItem = new Item("name1", "description1", 999999999L);
         tracker.add(oldItem);
         Item newItem = new Item("name1_1", "description1_1", 898989898989L);
@@ -37,14 +37,14 @@ public class TrackerTest {
         Item fourth = new Item("4th", "4th", 444L);
         Item fifth = new Item("5th", "5th", 555L);
 
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         tracker.add(first);
         tracker.add(second);
         tracker.add(third);
         tracker.add(fourth);
         tracker.add(fifth);
 
-        Tracker expected = new Tracker();
+        MemTracker expected = new MemTracker();
         expected.add(first);
         expected.add(second);
         expected.add(third);
@@ -67,12 +67,12 @@ public class TrackerTest {
         Item second = new Item("2nd", "2nd", 222L);
         Item third = new Item("3rd", "3rd", 333L);
 
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         tracker.add(first);
         tracker.add(second);
         tracker.add(third);
 
-        Tracker expected = new Tracker();
+        MemTracker expected = new MemTracker();
         expected.add(first);
         expected.add(second);
         expected.add(third);
@@ -88,7 +88,7 @@ public class TrackerTest {
 
     @Test
     public void whenFindAllThenReturnNotNullElementsOnly() {
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item first = new Item("1st", "1st", 111L);
         Item second = new Item("2nd", "2nd", 222L);
         Item third = new Item("3rd", "3rd", 333L);
@@ -112,7 +112,7 @@ public class TrackerTest {
 
     @Test
     public void whenFindByNameThenReturnArrayOfItemsWithSameName() {
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item first = new Item("1st", "1st", 111L);
         Item second = new Item("2nd", "2nd", 222L);
         Item third = new Item("3rd", "3rd", 333L);
@@ -133,7 +133,7 @@ public class TrackerTest {
 
     @Test
     public void whenNotFindByNameThenReturnArrayWithoutElements() {
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item first = new Item("1st", "1st", 111L);
         Item second = new Item("2nd", "2nd", 222L);
         Item third = new Item("3rd", "3rd", 333L);
@@ -149,7 +149,7 @@ public class TrackerTest {
 
     @Test
     public void whenFindByIdThenReturnElementWithSameId() {
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item first = new Item("1st", "1st", 111L);
         Item second = new Item("2nd", "2nd", 222L);
         Item third = new Item("3rd", "3rd", 333L);
@@ -171,7 +171,7 @@ public class TrackerTest {
 
     @Test
     public void whenNotFindByIdThenReturnNull() {
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item first = new Item("1st", "1st", 111L);
         Item second = new Item("2nd", "2nd", 222L);
         Item third = new Item("3rd", "3rd", 333L);

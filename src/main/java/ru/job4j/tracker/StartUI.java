@@ -18,7 +18,7 @@ public class StartUI implements Stop {
     /**
      * Хранение заявок.
      */
-    private Tracker tracker;
+    private Store tracker;
 
     /**
      * Флаг выполнения/выхода.
@@ -30,7 +30,7 @@ public class StartUI implements Stop {
      * @param input пользовательский ввод.
      * @param tracker хранение заявок.
      */
-    StartUI(Input input, Tracker tracker) {
+    StartUI(Input input, Store tracker) {
         this.input = input;
         this.tracker = tracker;
     }
@@ -39,6 +39,7 @@ public class StartUI implements Stop {
      * Основной цикл программы.
      */
     public void init() {
+        this.tracker.init();
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         menu.fillActions();
         menu.add(new Exit(this));
@@ -56,7 +57,7 @@ public class StartUI implements Stop {
                 new ValidateInput(
                         new ConsoleInput()
                 ),
-                new Tracker()
+                new SqlTracker()
         ).init();
     }
 

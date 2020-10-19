@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  * @version 0.1
  * @since version 0.1 2018-01-05
  */
-public class Tracker {
+public class MemTracker {
     /**
      * Массив для хранение заявок.
      */

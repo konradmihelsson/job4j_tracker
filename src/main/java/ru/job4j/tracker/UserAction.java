@@ -16,7 +16,7 @@ public interface UserAction {
     /**
      * Метод описывает действие.
      */
-    void execute(Input input, Tracker tracker);
+    void execute(Input input, Store tracker);
 
     /**
      * Метод отображает информацию о действии.
