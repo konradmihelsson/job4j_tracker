@@ -33,11 +33,16 @@ public class SqlTracker implements Store {
 
     @Override
     public Item add(Item item) {
-        String query = "insert into items (name) values ('" + item.getName() + "')";
+        String query = "insert into items (name) values (?)";
         Item result = null;
-        try (Statement stmt = cn.createStatement()) {
-            if (stmt.executeUpdate(query) == 1) {
-                result = item;
+        try (PreparedStatement ps = cn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, item.getName());
+            if (ps.executeUpdate() == 1) {
+                result = new Item(item.getName(),item.getDesc());
+            }
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                item.setId(rs.getString(1));
             }
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
@@ -47,58 +52,80 @@ public class SqlTracker implements Store {
 
     @Override
     public boolean replace(String id, Item item) {
-        return transmit("update items set name = '" + item.getName() + "' where id = " + Integer.parseInt(id));
+        boolean result = false;
+        String query = "update items set name = ? where id = ?";
+        try (PreparedStatement ps = cn.prepareStatement(query)) {
+            ps.setString(1, item.getName());
+            ps.setInt(2, Integer.parseInt(id));
+            if (ps.executeUpdate() == 1) {
+                result = true;
+            }
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public boolean delete(String id) {
-        return transmit("delete from items where id = " + Integer.parseInt(id));
+        boolean result = false;
+        String query = "delete from items where id = ?";
+        try (PreparedStatement ps = cn.prepareStatement(query)) {
+            ps.setInt(1, Integer.parseInt(id));
+            if (ps.executeUpdate() == 1) {
+                result = true;
+            }
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public List<Item> findAll() {
-        return receive("select id, name from items");
+        List<Item> result = new ArrayList<>();
+        String query = "select id, name from items";
+        try (PreparedStatement ps = cn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Item item = new Item(rs.getString(2), "");
+                item.setId(rs.getString(1));
+                result.add(item);
+            }
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public List<Item> findByName(String key) {
-        return receive("select id, name from items where name = '" + key + "'");
+        List<Item> result = new ArrayList<>();
+        String query = "select id, name from items where name = ?";
+        try (PreparedStatement ps = cn.prepareStatement(query)) {
+            ps.setString(1, key);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Item item = new Item(rs.getString(2), "");
+                item.setId(rs.getString(1));
+                result.add(item);
+            }
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public Item findById(String id) {
         Item result = null;
-        String query = "select id, name from items where id = " + id;
-        try (Statement stmt = cn.createStatement()) {
-            ResultSet rs = stmt.executeQuery(query);
+        String query = "select id, name from items where id = ?";
+        try (PreparedStatement ps = cn.prepareStatement(query)) {
+            ps.setInt(1, Integer.parseInt(id));
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                result = new Item(rs.getString(2), "id from db = " + rs.getInt(1));
-            }
-        } catch (SQLException sqlEx) {
-            sqlEx.printStackTrace();
-        }
-        return result;
-    }
-
-    private boolean transmit(String query) {
-        boolean result = false;
-        try (Statement stmt = cn.createStatement()) {
-            if (stmt.executeUpdate(query) == 1) {
-                result = true;
-
-            }
-        } catch (SQLException sqlEx) {
-            sqlEx.printStackTrace();
-        }
-        return result;
-    }
-
-    private List<Item> receive(String query) {
-        List<Item> result = new ArrayList<>();
-        try (Statement stmt = cn.createStatement()) {
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                result.add(new Item(rs.getString(2), "id from db = " + rs.getInt(1)));
+                result = new Item(rs.getString(2), "");
+                result.setId(rs.getString(1));
             }
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();

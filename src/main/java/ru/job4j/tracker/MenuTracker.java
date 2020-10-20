@@ -171,10 +171,7 @@ public class MenuTracker {
             } else {
                 this.printer.accept("---------- Заявка найдена. ----------");
                 this.printer.accept("Идентификатор:  Имя:    Описание:");
-                this.printer.accept(item.getName()
-                        .concat(" ")
-                        .concat(item.getDesc())
-                );
+                this.printer.accept(item.getId().concat(" ").concat(item.getName()).concat(" ").concat(item.getDesc()));
             }
         }
     }
@@ -239,7 +236,7 @@ class FindByName extends BaseAction {
             this.printer.accept("---------- Найдены следующие заявки. ----------");
             this.printer.accept("Идентификатор:  Имя:    Описание:");
             for (Item item : items) {
-                this.printer.accept(item.getName().concat(" ").concat(item.getDesc()));
+                this.printer.accept(item.getId().concat(" ").concat(item.getName()).concat(" ").concat(item.getDesc()));
             }
         }
     }
