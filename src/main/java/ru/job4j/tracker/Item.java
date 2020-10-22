@@ -1,5 +1,8 @@
 package ru.job4j.tracker;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * Класс заявка.
  * У класса есть поля идентификатор, имя, описание, дата создания, комментарии.
@@ -24,6 +27,25 @@ public class Item {
     public Item(String name, String desc) {
         this.name = name;
         this.desc = desc;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return getCreated() == item.getCreated() &&
+                getId().equals(item.getId()) &&
+                getName().equals(item.getName()) &&
+                getDesc().equals(item.getDesc()) &&
+                Arrays.equals(getComments(), item.getComments());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getId(), getName(), getDesc(), getCreated());
+        result = 31 * result + Arrays.hashCode(getComments());
+        return result;
     }
 
     public String getId() {
